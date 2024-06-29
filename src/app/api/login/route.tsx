@@ -4,7 +4,7 @@ import { connectDb } from "@/helper/db";
 connectDb();
 export async function POST(req: NextRequest) {
     const { email, password } = await req.json();
-
+    
     try {
         const user = await findUserByEmail(email);
 

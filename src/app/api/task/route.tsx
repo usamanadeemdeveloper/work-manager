@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 // Create a new task
 export async function POST(request: NextRequest) {
     const body = await request.json();
-    const { title, content } = body;
+    const { title, content, status } = body;
     const authToken = request.cookies.get('authToken')?.value;
     try {
         const data = jwt.verify(authToken!, process.env.JWT_TOKEN!) as JwtPayload;
@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
         const task = new Task({
             title,
             content,
+            status,
             userId
         } as ITask);
 

@@ -104,6 +104,52 @@ export async function PUT(request: Request, { params }: { params: { taskId: stri
         );
     }
 }
+export async function PATCH(request: Request, { params }: { params: { taskId: string } }) {
+    try {
+        const { taskId } = params;
+        const existingTask = await Task.findById(taskId);
+
+        if (!existingTask) {
+            return NextResponse.json(
+                {
+                    message: `Task not found with ID: ${taskId}`,
+                    status: false
+                },
+                {
+                    status: 404
+                }
+            );
+        }
+
+        const { status } = await request.json();
+        if (status) existingTask.status = status;
+
+        const updatedTask = await existingTask.save();
+
+        return NextResponse.json(
+            {
+                message: "Task updated successfully",
+                task: updatedTask,
+                status: true
+            },
+            {
+                status: 200
+            }
+        );
+    } catch (error) {
+        return NextResponse.json(
+            {
+                message: "Failed to update task",
+                error: error instanceof Error ? error.message : "Unknown error",
+                status: false
+            },
+            {
+                status: 500
+            }
+        );
+    }
+}
+
 
 // Delete Task
 export async function DELETE(request: Request, { params }: { params: { taskId: string } }) {

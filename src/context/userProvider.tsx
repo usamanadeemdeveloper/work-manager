@@ -7,10 +7,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { AxiosError } from 'axios';
 
 const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<JwtPayload | null>(() => {
-        const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : null;
-    });
+    const [user, setUser] = useState<JwtPayload | null>(null);
 
     useEffect(() => {
         async function fetchCurrentUser() {

@@ -36,7 +36,7 @@ export const config = {
   ],
 };
 
-const publicPaths = ['/api/login', '/api/signup', '/login', '/signup'];
+const publicPaths = ['/api/login', '/api/user', '/login', '/signup'];
 const protectedPaths = ['/add-task', '/show-task', '/profile'];
 
 const isPublicPath = (pathname: string): boolean => {
