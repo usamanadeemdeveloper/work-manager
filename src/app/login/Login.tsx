@@ -17,7 +17,6 @@ const Login = () => {
         if (savedEmail && savedPassword) {
             setUser({ email: savedEmail, password: savedPassword });
         }
-
         // Validate form
         const validateForm = () => {
             const { email, password } = user;

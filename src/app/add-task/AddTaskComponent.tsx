@@ -1,10 +1,11 @@
+// add-task/AddTaskComponent.tsx
 "use client";
 import Image from 'next/image';
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import addtaskSvg from '../../../public/addTask.svg';
 import { ObjectId } from "mongoose";
 import { TaskStatus } from '@/enums/status';
-import { addTask } from '@/services/taskService';
+import { addTask, getTaskById } from '@/services/taskService';
 import { ITask } from '@/types/task';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -17,7 +18,8 @@ type TaskState = {
   status: TaskStatus;
   userId: ObjectId;
 };
-const AddTaskComponent = () => {
+
+const AddTaskComponent = ({ id }: { id: string }) => {
   const [task, setTask] = useState<TaskState>({
     title: '',
     content: '',
@@ -43,8 +45,7 @@ const AddTaskComponent = () => {
       const result = await addTask(task as ITask);
       if (result && !(result instanceof AxiosError)) {
         toast.success('Task added successfully');
-        // now clean task
-        task
+        setTask({ title: '', content: '', addedDate: new Date(), status: TaskStatus.Pending, userId: '' as unknown as ObjectId });
       } else if (result instanceof AxiosError) {
         const axiosError = result as AxiosError<ErrorResponse>;
         const errorRes = axiosError.response?.data?.error || errorMsg;
@@ -64,13 +65,49 @@ const AddTaskComponent = () => {
     }
   };
 
+  useEffect(() => {
+    if (id) {
+      // Fetch the task data using the id if needed
+      const fetchTask = async () => {
+        // try {
+        //   
+        //   setTask(taskData);
+        // } catch (error) {
+        //   console.error("Error fetching task data:", error);
+        // }
+        try {
+          const taskData = await getTaskById(id);
+          if (taskData && !(taskData instanceof AxiosError)) {
+            // toast.success('Task added successfully');
+            setTask({ title: '', content: '', addedDate: new Date(), status: TaskStatus.Pending, userId: '' as unknown as ObjectId });
+          } else if (taskData instanceof AxiosError) {
+            const axiosError = taskData as AxiosError<ErrorResponse>;
+            const errorRes = axiosError.response?.data?.error;
+            const message = axiosError.response?.data?.message;
+            console.error(errorRes);
+            // toast.error('Error adding task: ' + message);
+          } else {
+            // setError(errorMsg);
+            // toast.error(errorMsg);
+          }
+        } catch (err: any) {
+          // setError(errorMsg);
+          // toast.error('Unexpected error: ' + err);
+        } finally {
+          // setIsSubmitting(false);
+        }
+      };
+      fetchTask();
+    }
+  }, [id]);
+
   return (
     <div className='grid grid-cols-12 justify-center mt-3'>
       <div className='col-span-4 col-start-5 shadow-inner border-2 border-gray-600 p-6 rounded-xl'>
         <div className='flex justify-center'>
-          <Image src={addtaskSvg} alt='loginSvg' width={250} priority />
+          <Image src={addtaskSvg} alt='addTaskSvg' width={250} priority />
         </div>
-        <h1 className='text-3xl text-center mt-5'>Add Task</h1>
+        <h1 className='text-3xl text-center mt-5'>{id ? 'Edit Task' : 'Add Task'}</h1>
         <form onSubmit={handleSubmit}>
           <div className='mb-6'>
             <label htmlFor='title' className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Title</label>
@@ -113,7 +150,7 @@ const AddTaskComponent = () => {
             className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Submitting...' : 'Add Task'}
+            {isSubmitting ? 'Submitting...' : id ? 'Edit Task' : 'Add Task'}
           </button>
           <button
             type='reset'

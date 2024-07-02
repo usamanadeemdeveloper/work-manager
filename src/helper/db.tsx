@@ -1,8 +1,9 @@
-
-import { User } from "@/model/user";
 import mongoose from "mongoose";
 
 export const connectDb = async () => {
+    if (mongoose?.connection?.readyState === 1) {
+        return;
+    }
     try {
         const mongoDbUrl = process.env.MONGO_DB_URL;
         if (mongoDbUrl) {

@@ -5,6 +5,7 @@ import { IUser } from "@/types/user";
 import { AxiosError, AxiosResponse } from "axios";
 import { JwtPayload } from "jsonwebtoken";
 connectDb();
+
 export async function signUp(user: IUser): Promise<IUser | AxiosError | null> {
     try {
         const result: AxiosResponse<IUser> = await httpAxios
@@ -31,9 +32,8 @@ export async function login(loginData: { email: string, password: string }): Pro
 }
 export async function currentUser(): Promise<JwtPayload | AxiosError | null> {
     try {
-        const result: AxiosResponse<JwtPayload> = await httpAxios
-            .get("/api/current");
-        return result.data;
+        const result: AxiosResponse<JwtPayload> = await httpAxios.get("/api/current");
+        return result.data; // Adjust the status based on your needs
     } catch (error) {
         if (error instanceof AxiosError) {
             return error;

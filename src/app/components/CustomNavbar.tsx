@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { logout } from "@/services/userService";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,9 +13,9 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 const CustomNavbar = (): JSX.Element => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const context = useContext<any>(UserContext);
+    const context = useContext(UserContext);
     const router = useRouter();
-    
+
     const toggleMenu = (): void => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -24,8 +24,7 @@ const CustomNavbar = (): JSX.Element => {
         try {
             const result = await logout();
             toast.success(result?.message);
-            context?.setUser(undefined);
-            localStorage.removeItem('user');
+            context?.setUser(null);
             router.push('/login');
         } catch (error) {
             toast.error('Error: ' + error);

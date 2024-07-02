@@ -49,3 +49,15 @@ export async function completeTask(taskId: string, status: TaskStatus): Promise<
         return null;
     }
 }
+
+export async function getTaskById(taskId: string): Promise<ITask | AxiosError | null> {
+    try {
+        const result: AxiosResponse<ITask> = await httpAxios.get(`/api/task/${taskId}`);
+        return result.data;
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            return error;
+        }
+        return null;
+    }
+}

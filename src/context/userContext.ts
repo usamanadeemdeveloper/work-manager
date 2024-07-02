@@ -1,5 +1,6 @@
 "use client";
-import { createContext } from "react";
+import { UserContextType } from '@/types/UserContextType';
+import { createContext } from 'react';
 
-const UserContext = createContext({});
+const UserContext = createContext<UserContextType | null>(null);
 export default UserContext;

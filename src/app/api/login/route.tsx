@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { findUserByEmail, validatePassword, generateToken } from "../../../helper/authHelper";
 import { connectDb } from "@/helper/db";
-connectDb();
 export async function POST(req: NextRequest) {
     const { email, password } = await req.json();
-    
     try {
+        await connectDb();
         const user = await findUserByEmail(email);
 
         if (!user) {
