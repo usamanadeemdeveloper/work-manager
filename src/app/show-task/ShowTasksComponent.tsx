@@ -58,6 +58,7 @@ const ShowTasksComponent = () => {
 
     const handleComplete = async (taskId: string, status: TaskStatus): Promise<void> => {
         setLoading(true);
+        // Testing
         try {
             const result = await completeTask(taskId, status);
             if (result && !(result instanceof AxiosError)) {
