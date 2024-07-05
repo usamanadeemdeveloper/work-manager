@@ -23,10 +23,7 @@ export async function GET(request: Request, { params }: { params: { taskId: stri
         }
 
         return NextResponse.json(
-            {
-                task,
-                status: true
-            },
+            task,
             {
                 status: 200,
                 statusText: "OK"
